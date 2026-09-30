@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Harmoni dalam Ekosistem - Game Edukasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        .creator-credit {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-size: 11px;
+            color: #00d4ff;
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.4);
+            z-index: 1000;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+
+        .main-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Screen */
+        .start-screen {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0c0c0c 100%);
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: clamp(28px, 6vw, 48px);
+            color: #00d4ff;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 212, 255, 0.4);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+            font-weight: bold;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 212, 255, 0.4); }
+            to { text-shadow: 0 0 30px rgba(0, 212, 255, 1), 0 0 60px rgba(0, 212, 255, 0.6); }
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 3vw, 20px);
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .ecosystem-visual {
+            width: clamp(200px, 40vw, 350px);
+            height: clamp(200px, 40vw, 350px);
+            margin: 20px auto;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%2300d4ff;stop-opacity:0.3" /></linearGradient></defs><circle cx="200" cy="200" r="180" fill="url(%23grad1)" stroke="%2300d4ff" stroke-width="2"/><text x="200" y="180" text-anchor="middle" fill="%2300d4ff" font-size="80">🌍</text><text x="200" y="220" text-anchor="middle" fill="%2300d4ff" font-size="20">EKOSISTEM</text></svg>') center/contain no-repeat;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Material Screen */
+        .material-screen {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .material-content {
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 20px;
+            padding: 15px;
+            max-width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .material-title {
+            color: #00d4ff;
+            font-size: clamp(18px, 4vw, 24px);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .material-section {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 10px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .material-text {
+            font-size: clamp(11px, 2.3vw, 14px);
+            line-height: 1.5;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .material-image {
+            width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.05);
+            padding: 5px;
+        }
+
+        /* Quiz Screen */
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 20px;
+            padding: 15px;
+            border: 2px solid #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question-number {
+            color: #00d4ff;
+            font-size: clamp(13px, 2.8vw, 16px);
+            font-weight: bold;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: clamp(13px, 2.8vw, 15px);
+        }
+
+        .question-text {
+            font-size: clamp(13px, 3.2vw, 18px);
+            color: #fff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid #00d4ff;
+            color: #e0e0e0;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: clamp(12px, 2.6vw, 14px);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: rgba(0, 212, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .option-btn.correct {
+            background: rgba(0, 255, 100, 0.4);
+            border-color: #00ff64;
+            animation: correctPulse 0.5s;
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 0, 100, 0.4);
+            border-color: #ff0064;
+            animation: shake 0.5s;
+        }
+
+        .option-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: clamp(12px, 2.8vw, 14px);
+            text-align: center;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .feedback.correct {
+            background: rgba(0, 255, 100, 0.2);
+            border: 2px solid #00ff64;
+            color: #00ff64;
+        }
+
+        .feedback.wrong {
+            background: rgba(255, 0, 100, 0.2);
+            border: 2px solid #ff0064;
+            color: #ff88aa;
+        }
+
+        .next-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00ff64, #00cc50);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-size: clamp(14px, 2.8vw, 16px);
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .next-btn.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 100, 0.5);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: clamp(22px, 5vw, 32px);
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+
+        .result-score {
+            font-size: clamp(42px, 9vw, 64px);
+            color: #00ff64;
+            text-shadow: 0 0 30px rgba(0, 255, 100, 0.6);
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .result-message {
+            font-size: clamp(14px, 3.2vw, 18px);
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .stars {
+            font-size: clamp(28px, 6vw, 42px);
+            margin: 15px 0;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #00ff64);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: rgba(0, 212, 255, 0.2);
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(0, 212, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #888;
+            color: #e0e0e0;
+            padding: 10px 25px;
+            font-size: clamp(14px, 2.8vw, 16px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00d4ff;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0099cc;
+        }
+
+        .topic-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .topic-tab {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .topic-tab:hover, .topic-tab.active {
+            background: rgba(0, 212, 255, 0.5);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="creator-credit">Created by Rebo Santosa</div>
+    <button class="sound-toggle" onclick="toggleSound()" id="soundBtn">🔊</button>
+
+    <div class="main-container">
+        <!-- Start Screen -->
+        <div class="screen start-screen active" id="startScreen">
+            <h1 class="game-title">🌿 Harmoni dalam Ekosistem 🌿</h1>
+            <p class="subtitle">Game Edukasi Interaktif - Kelas 5 SD</p>
+            <div class="ecosystem-visual"></div>
+            <div style="margin: 20px 0;">
+                <button class="btn" onclick="showMaterial()">📚 Pelajari Materi</button>
+                <button class="btn" onclick="startQuiz()">🎮 Mulai Quiz (35 Soal)</button>
+            </div>
+            <p style="color: #666; font-size: 13px; margin-top: 20px; max-width: 80%;">
+                Pelajari komponen ekosistem, rantai makanan, jaring-jaring makanan, dan keseimbangan alam
+            </p>
+        </div>
+
+        <!-- Material Screen -->
+        <div class="screen material-screen" id="materialScreen">
+            <h2 class="material-title">📖 Materi Pembelajaran Lengkap</h2>
+            <div class="topic-tabs">
+                <button class="topic-tab active" onclick="showTopic('komponen', this)">Komponen</button>
+                <button class="topic-tab" onclick="showTopic('interaksi', this)">Interaksi</button>
+                <button class="topic-tab" onclick="showTopic('rantai', this)">Rantai Makanan</button>
+                <button class="topic-tab" onclick="showTopic('jaring', this)">Jaring-Jaring</button>
+                <button class="topic-tab" onclick="showTopic('keseimbangan', this)">Keseimbangan</button>
+            </div>
+            <div class="material-content">
+                <div id="materialText">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="showStart()">🏠 Kembali</button>
+                    <button class="btn" onclick="startQuiz()">🎮 Mulai Quiz</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="screen quiz-screen" id="quizScreen">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <span class="question-number" id="questionNumber">Soal 1 dari 35</span>
+                    <span class="score-display" id="scoreDisplay">Skor: 0</span>
+                </div>
+                <div class="question-text" id="questionText">Loading...</div>
+                <div class="options-container" id="optionsContainer"></div>
+                <div class="feedback" id="feedback"></div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Soal Selanjutnya →</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="screen result-screen" id="resultScreen">
+            <h2 class="result-title">🎉 Quiz Selesai!</h2>
+            <div class="result-score" id="finalScore">0</div>
+            <div class="stars" id="stars">⭐⭐⭐</div>
+            <p class="result-message" id="resultMessage">Hebat!</p>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showStart()">🏠 Menu Utama</button>
+                <button class="btn" onclick="restartQuiz()">🔄 Ulangi Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        let soundEnabled = true;
+
+        // Material Content
+        const materialContent = {
+            komponen: `
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🌱 A. Komponen Ekosistem</h3>
+                    <p class="material-text">
+                        <strong>Komponen Biotik (Makhluk Hidup):</strong><br>
+                        - Manusia, hewan (sapi, ikan, kupu-kupu)<br>
+                        - Tumbuhan (rumput, bunga, pohon)<br>
+                        - Jamur dan bakteri<br><br>
+                        
+                        <strong>Komponen Abiotik (Benda Tak Hidup):</strong><br>
+                        - Matahari (sumber energi cahaya)<br>
+                        - Air, udara, tanah<br>
+                        - Batu, mineral, suhu
+                    </p>
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect fill='%231a1a2e' width='400' height='200'/><text x='50' y='40' fill='%2300d4ff' font-size='16'>BIOTIK:</text><text x='50' y='65' fill='%23e0e0e0' font-size='12'>🌳 Tumbuhan</text><text x='50' y='85' fill='%23e0e0e0' font-size='12'>🐄 Hewan</text><text x='50' y='105' fill='%23e0e0e0' font-size='12'>👤 Manusia</text><text x='250' y='40' fill='%2300d4ff' font-size='16'>ABIOTIK:</text><text x='250' y='65' fill='%23e0e0e0' font-size='12'>☀️ Matahari</text><text x='250' y='85' fill='%23e0e0e0' font-size='12'>💧 Air</text><text x='250' y='105' fill='%23e0e0e0' font-size='12'>🪨 Tanah</text></svg>" alt="Komponen Ekosistem" class="material-image">
+                </div>
+                
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">📊 B. Tingkatan Organisasi</h3>
+                    <p class="material-text">
+                        <strong>Individu:</strong> Satu makhluk hidup tunggal<br>
+                        <strong>Populasi:</strong> Kelompok makhluk hidup sejenis di area tertentu<br>
+                        <strong>Komunitas:</strong> Berbagai populasi yang hidup bersama<br>
+                        <strong>Habitat:</strong> Tempat tinggal makhluk hidup<br>
+                        <strong>Ekosistem:</strong> Interaksi biotik dan abiotik
+                    </p>
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 150'><rect fill='%231a1a2e' width='400' height='150'/><text x='20' y='30' fill='%2300d4ff' font-size='14'>Individu →</text><text x='120' y='30' fill='%23fff' font-size='12'>🦋</text><text x='20' y='60' fill='%2300d4ff' font-size='14'>Populasi →</text><text x='120' y='60' fill='%23fff' font-size='12'>🦋🦋🦋</text><text x='20' y='90' fill='%2300d4ff' font-size='14'>Komunitas →</text><text x='120' y='90' fill='%23fff' font-size='12'>🌳🐦🦋</text><text x='20' y='120' fill='%2300d4ff' font-size='14'>Ekosistem →</text><text x='120' y='120' fill='%23fff' font-size='12'>🦋🌳🐦☀️💧</text></svg>" alt="Tingkatan Organisasi" class="material-image">
+                </div>
+            `,
+            interaksi: `
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🔄 Interaksi Antarkomponen</h3>
+                    <p class="material-text">
+                        Semua komponen dalam ekosistem saling terhubung dan saling memengaruhi:<br><br>
+                        
+                        <strong>Peran Komponen Abiotik:</strong><br>
+                        - Matahari: sumber energi untuk fotosintesis<br>
+                        - Air & tanah: tempat hidup dan sumber nutrisi<br>
+                        - Udara: untuk bernapas (oksigen)<br><br>
+                        
+                        <strong>Contoh Interaksi:</strong><br>
+                        - Tumbuhan butuh matahari, air, dan tanah<br>
+                        - Hewan butuh tumbuhan dan air<br>
+                        - Cacing tanah menyuburkan tanah
+                    </p>
+                </div>
+                
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🌊 Ekosistem Khas</h3>
+                    <p class="material-text">
+                        <strong>Ekosistem Laut:</strong><br>
+                        - Biotik: terumbu karang, ikan, plankton<br>
+                        - Abiotik: air asin, batu karang<br><br>
+                        
+                        <strong>Ekosistem Kutub:</strong><br>
+                        - Biotik: beruang kutub, walrus<br>
+                        - Abiotik: salju, gletser<br><br>
+                        
+                        <strong>Ekosistem Gua:</strong><br>
+                        - Abiotik khas: stalaktit, stalagmit<br><br>
+                        
+                        <strong>Ekosistem Tundra:</strong><br>
+                        - Area tanpa pohon di Kutub Utara<br>
+                        - Tanah tertutup salju hampir sepanjang tahun
+                    </p>
+                </div>
+            `,
+            rantai: `
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🔗 Rantai Makanan</h3>
+                    <p class="material-text">
+                        <strong>Produsen:</strong> Tumbuhan yang membuat makanan sendiri melalui fotosintesis<br><br>
+                        
+                        <strong>Konsumen:</strong><br>
+                        - Konsumen Tingkat 1: Herbivora (pemakan tumbuhan)<br>
+                        - Konsumen Tingkat 2: Karnivora (pemakan daging)<br>
+                        - Konsumen Puncak: Predator terbesar<br><br>
+                        
+                        <strong>Dekomposer:</strong> Bakteri dan jamur yang menguraikan makhluk hidup mati menjadi humus<br><br>
+                        
+                        <strong>Contoh:</strong><br>
+                        Tumbuhan → Kelinci → Elang → Dekomposer
+                    </p>
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 180'><rect fill='%231a1a2e' width='400' height='180'/><text x='20' y='40' fill='%2300ff64' font-size='16'>🌱 Tumbuhan</text><text x='20' y='55' fill='%23fff' font-size='10'>(Produsen)</text><text x='150' y='35' fill='%2300d4ff' font-size='20'>→</text><text x='180' y='40' fill='%23ffa500' font-size='16'>🐰 Kelinci</text><text x='180' y='55' fill='%23fff' font-size='10'>(Konsumen 1)</text><text x='310' y='35' fill='%2300d4ff' font-size='20'>→</text><text x='220' y='90' fill='%23ff0064' font-size='16'>🦅 Elang</text><text x='220' y='105' fill='%23fff' font-size='10'>(Konsumen 2)</text><text x='180' y='140' fill='%2300d4ff' font-size='20'>↓</text><text x='150' y='170' fill='%23888' font-size='14'>🍄 Dekomposer</text></svg>" alt="Rantai Makanan" class="material-image">
+                </div>
+                
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🌊 Rantai Makanan Laut</h3>
+                    <p class="material-text">
+                        <strong>Fitoplankton:</strong> Tumbuhan mikroskopis di laut (produsen utama)<br>
+                        <strong>Zooplankton:</strong> Hewan kecil pemakan fitoplankton<br>
+                        <strong>Ikan kecil:</strong> Memakan zooplankton<br>
+                        <strong>Ikan besar:</strong> Memakan ikan kecil<br>
+                        <strong>Predator puncak:</strong> Hiu, paus pembunuh
+                    </p>
+                </div>
+            `,
+            jaring: `
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🕸️ Jaring-Jaring Makanan</h3>
+                    <p class="material-text">
+                        Kumpulan rantai makanan yang saling berkaitan dalam ekosistem.<br><br>
+                        
+                        <strong>Karakteristik:</strong><br>
+                        - Satu makhluk hidup bisa berada di beberapa rantai makanan<br>
+                        - Konsumen bisa memiliki peran berbeda<br>
+                        - Lebih kompleks dari rantai makanan<br><br>
+                        
+                        <strong>Contoh:</strong><br>
+                        Bunga → Kupu-kupu → Laba-laba → Burung<br>
+                        Bunga → Semut → Laba-laba → Burung<br>
+                        Bunga → Kumbang → Katak → Ular
+                    </p>
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect fill='%231a1a2e' width='400' height='200'/><text x='20' y='40' fill='%2300ff64' font-size='14'>🌸 Bunga</text><text x='120' y='35' fill='%2300d4ff' font-size='16'>↘↙</text><text x='160' y='30' fill='%23ffa500' font-size='14'>🦋 Kupu</text><text x='220' y='30' fill='%23ffa500' font-size='14'>🐜 Semut</text><text x='280' y='35' fill='%2300d4ff' font-size='16'>↙</text><text x='190' y='80' fill='%23ff8800' font-size='14'>🕷️ Laba-laba</text><text x='280' y='75' fill='%2300d4ff' font-size='16'>↓</text><text x='260' y='120' fill='%230099ff' font-size='14'>🐦 Burung</text><text x='100' y='120' fill='%2300d4ff' font-size='16'>←</text><text x='40' y='120' fill='%23888' font-size='12'>🍄 Dekomposer</text></svg>" alt="Jaring-jaring Makanan" class="material-image">
+                </div>
+                
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">⚡ Transfer Energi</h3>
+                    <p class="material-text">
+                        Dalam rantai makanan terjadi transfer energi:<br>
+                        - Energi matahari → Tumbuhan (fotosintesis)<br>
+                        - Tumbuhan → Herbivora<br>
+                        - Herbivora → Karnivora<br>
+                        - Setiap tingkat kehilangan energi (panas)<br>
+                        - Hanya 10% energi yang ditransfer ke tingkat berikutnya
+                    </p>
+                </div>
+            `,
+            keseimbangan: `
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">⚖️ Keseimbangan Ekosistem</h3>
+                    <p class="material-text">
+                        <strong>Harmoni tercapai bila:</strong><br>
+                        - Jumlah dan komposisi komponen terjaga<br>
+                        - Tidak ada komponen yang berlebihan atau berkurang drastis<br>
+                        - Rantai makanan berjalan seimbang<br><br>
+                        
+                        <strong>Penyebab Ketidakseimbangan:</strong><br>
+                        1. Bencana alam (gunung meletus, kebakaran)<br>
+                        2. Aktivitas manusia (penebangan hutan, polusi)<br>
+                        3. Hilangnya satu komponen dalam rantai makanan
+                    </p>
+                </div>
+                
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🌍 Dampak Aktivitas Manusia</h3>
+                    <p class="material-text">
+                        <strong>Aktivitas Merusak:</strong><br>
+                        - Penebangan hutan → hilangnya habitat<br>
+                        - Sampah plastik → pencemaran tanah & laut<br>
+                        - Polusi udara dari kendaraan<br>
+                        - Penggunaan pupuk kimia berlebihan<br><br>
+                        
+                        <strong>Contoh Nyata:</strong><br>
+                        - Harimau masuk permukiman (habitat rusak)<br>
+                        - Beruang madu cari makan di pemukiman<br>
+                        - Hewan laut mati karena plastik
+                    </p>
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 150'><rect fill='%231a1a2e' width='400' height='150'/><text x='20' y='40' fill='%23ff0064' font-size='14'>❌ MERUSAK:</text><text x='40' y='65' fill='%23888' font-size='12'>🌲 Penebangan hutan</text><text x='40' y='85' fill='%23888' font-size='12'>🥤 Sampah plastik</text><text x='40' y='105' fill='%23888' font-size='12'>🏭 Polusi udara</text><text x='220' y='40' fill='%2300ff64' font-size='14'>✅ MENJAGA:</text><text x='240' y='65' fill='%23888' font-size='12'>🌳 Menanam pohon</text><text x='240' y='85' fill='%23888' font-size='12'>♻️ Daur ulang</text><text x='240' y='105' fill='%23888' font-size='12'>💧 Hemat air</text></svg>" alt="Dampak Aktivitas" class="material-image">
+                </div>
+                
+                <div class="material-section">
+                    <h3 style="color: #00d4ff; margin: 10px 0;">🌱 Cara Menjaga Ekosistem</h3>
+                    <p class="material-text">
+                        <strong>Perilaku yang Harus Dilakukan:</strong><br>
+                        - Menanam dan merawat pohon<br>
+                        - Mengurangi penggunaan plastik<br>
+                        - Membuang sampah pada tempatnya<br>
+                        - Tidak membakar sampah sembarangan<br>
+                        - Hemat penggunaan air dan energi<br>
+                        - Tidak merusak habitat hewan<br>
+                        - Melakukan daur ulang sampah
+                    </p>
+                </div>
+            `
+        };
+
+        // Quiz Questions - 35 questions
+        const questions = [
+            {
+                question: "Komponen biotik dalam ekosistem adalah...",
+                options: ["Matahari dan air", "Tumbuhan dan hewan", "Tanah dan batu", "Udara dan mineral"],
+                correct: 1,
+                explanation: "Komponen biotik adalah makhluk hidup seperti tumbuhan, hewan, manusia, jamur, dan bakteri."
+            },
+            {
+                question: "Makhluk hidup yang dapat membuat makanannya sendiri disebut...",
+                options: ["Konsumen", "Dekomposer", "Produsen", "Predator"],
+                correct: 2,
+                explanation: "Produsen (tumbuhan) dapat membuat makanan sendiri melalui proses fotosintesis."
+            },
+            {
+                question: "Proses fotosintesis pada tumbuhan memerlukan komponen abiotik berupa...",
+                options: ["Hewan dan jamur", "Matahari, air, dan udara", "Tanah dan batu", "Mineral dan pasir"],
+                correct: 1,
+                explanation: "Fotosintesis memerlukan sinar matahari, air, dan karbon dioksida dari udara."
+            },
+            {
+                question: "Hewan yang memakan tumbuhan disebut...",
+                options: ["Karnivora", "Omnivora", "Herbivora", "Insektivora"],
+                correct: 2,
+                explanation: "Herbivora adalah hewan pemakan tumbuhan, seperti sapi, kelinci, dan rusa."
+            },
+            {
+                question: "Urutan rantai makanan yang benar adalah...",
+                options: ["Konsumen → Produsen → Dekomposer", "Produsen → Konsumen → Dekomposer", "Dekomposer → Produsen → Konsumen", "Konsumen → Dekomposer → Produsen"],
+                correct: 1,
+                explanation: "Rantai makanan dimulai dari produsen (tumbuhan), kemudian konsumen (hewan), dan diakhiri dekomposer."
+            },
+            {
+                question: "Bakteri dan jamur dalam ekosistem berperan sebagai...",
+                options: ["Produsen", "Konsumen tingkat 1", "Konsumen puncak", "Dekomposer"],
+                correct: 3,
+                explanation: "Dekomposer (bakteri dan jamur) menguraikan makhluk hidup yang mati menjadi nutrisi untuk tanah."
+            },
+            {
+                question: "Konsumen puncak dalam rantai makanan biasanya adalah...",
+                options: ["Tumbuhan", "Herbivora kecil", "Karnivora besar", "Dekomposer"],
+                correct: 2,
+                explanation: "Konsumen puncak adalah karnivora besar seperti elang, harimau, atau hiu yang tidak dimangsa hewan lain."
+            },
+            {
+                question: "Jaring-jaring makanan adalah...",
+                options: ["Satu rantai makanan", "Kumpulan rantai makanan yang saling berkaitan", "Makanan untuk jaring", "Jaring untuk menangkap ikan"],
+                correct: 1,
+                explanation: "Jaring-jaring makanan adalah kumpulan beberapa rantai makanan yang saling terhubung dalam ekosistem."
+            },
+            {
+                question: "Jika populasi tikus dalam ekosistem menurun drastis, apa yang terjadi pada populasi ular?",
+                options: ["Meningkat", "Menurun", "Tetap sama", "Hilang"],
+                correct: 1,
+                explanation: "Populasi ular akan menurun karena kehilangan sumber makanan utama (tikus)."
+            },
+            {
+                question: "Komponen abiotik yang berperan penting dalam fotosintesis adalah...",
+                options: ["Tanah", "Sinar matahari", "Batu", "Mineral"],
+                correct: 1,
+                explanation: "Sinar matahari memberikan energi yang diperlukan tumbuhan untuk fotosintesis."
+            },
+            {
+                question: "Ekosistem laut memiliki produsen utama berupa...",
+                options: ["Ikan besar", "Fitoplankton", "Paus", "Kepiting"],
+                correct: 1,
+                explanation: "Fitoplankton adalah tumbuhan mikroskopis yang menjadi produsen utama di ekosistem laut."
+            },
+            {
+                question: "Hewan yang memakan daging dan tumbuhan disebut...",
+                options: ["Herbivora", "Karnivora", "Omnivora", "Frugivora"],
+                correct: 2,
+                explanation: "Omnivora adalah hewan pemakan segala, seperti beruang, ayam, dan manusia."
+            },
+            {
+                question: "Keseimbangan ekosistem terganggu ketika...",
+                options: ["Semua komponen seimbang", "Salah satu komponen hilang atau berlebihan", "Tidak ada perubahan", "Semua makhluk hidup berkembang biak"],
+                correct: 1,
+                explanation: "Keseimbangan ekosistem terganggu jika ada komponen yang hilang, berkurang, atau berlebihan jumlahnya."
+            },
+            {
+                question: "Aktivitas manusia yang dapat merusak keseimbangan ekosistem adalah...",
+                options: ["Menanam pohon", "Membuang sampah sembarangan", "Menghemat air", "Menggunakan energi terbarukan"],
+                correct: 1,
+                explanation: "Membuang sampah sembarangan mencemari lingkungan dan merusak ekosistem."
+            },
+            {
+                question: "Plastik berbahaya bagi ekosistem karena...",
+                options: ["Mudah terurai", "Butuh ratusan tahun untuk terurai", "Menyuburkan tanah", "Makanan untuk hewan"],
+                correct: 1,
+                explanation: "Plastik butuh ratusan hingga ribuan tahun untuk terurai, sehingga mencemari lingkungan dalam waktu lama."
+            },
+            {
+                question: "Habitat adalah...",
+                options: ["Tempat tinggal makhluk hidup", "Jenis makanan hewan", "Cara berkembang biak", "Jumlah populasi"],
+                correct: 0,
+                explanation: "Habitat adalah lingkungan tempat tinggal alami suatu makhluk hidup."
+            },
+            {
+                question: "Populasi adalah...",
+                options: ["Satu individu", "Kelompok makhluk hidup sejenis", "Semua makhluk hidup", "Komponen abiotik"],
+                correct: 1,
+                explanation: "Populasi adalah kumpulan individu dari spesies yang sama yang hidup di area tertentu."
+            },
+            {
+                question: "Komunitas dalam ekosistem adalah...",
+                options: ["Satu jenis makhluk hidup", "Berbagai populasi yang hidup bersama", "Komponen abiotik", "Tempat tinggal"],
+                correct: 1,
+                explanation: "Komunitas adalah kumpulan dari berbagai populasi makhluk hidup yang berbeda yang hidup bersama di suatu area."
+            },
+            {
+                question: "Gunung meletus dapat mempengaruhi ekosistem dengan cara...",
+                options: ["Hanya merusak", "Merusak tapi juga menyuburkan tanah", "Tidak berpengaruh", "Hanya menguntungkan"],
+                correct: 1,
+                explanation: "Gunung meletus merusak ekosistem jangka pendek, tapi abu vulkaniknya dapat menyuburkan tanah dalam jangka panjang."
+            },
+            {
+                question: "Cara menjaga keseimbangan ekosistem adalah...",
+                options: ["Menebang hutan sembarangan", "Membuang limbah ke sungai", "Menanam pohon dan mengurangi sampah plastik", "Membakar sampah"],
+                correct: 2,
+                explanation: "Menanam pohon dan mengurangi sampah plastik membantu menjaga keseimbangan ekosistem."
+            },
+            {
+                question: "Zooplankton dalam ekosistem laut berperan sebagai...",
+                options: ["Produsen", "Konsumen yang memakan fitoplankton", "Dekomposer", "Komponen abiotik"],
+                correct: 1,
+                explanation: "Zooplankton adalah hewan kecil yang memakan fitoplankton dalam rantai makanan laut."
+            },
+            {
+                question: "Humus dalam tanah penting karena...",
+                options: ["Menyuburkan tanah", "Mengeras kan tanah", "Mengeringkan tanah", "Membuat tanah berbatu"],
+                correct: 0,
+                explanation: "Humus adalah hasil penguraian dekomposer yang menyuburkan tanah dan membantu pertumbuhan tumbuhan."
+            },
+            {
+                question: "Harimau masuk ke permukiman warga biasanya terjadi karena...",
+                options: ["Mencari teman", "Habitatnya rusak dan makanan berkurang", "Ingin bermain", "Suka dengan manusia"],
+                correct: 1,
+                explanation: "Harimau masuk permukiman karena habitatnya rusak akibat aktivitas manusia, sehingga makanan mereka berkurang."
+            },
+            {
+                question: "Ekosistem tundra memiliki ciri khas...",
+                options: ["Panas dan kering", "Dingin dan tertutup salju", "Hangat dan lembab", "Panas dan basah"],
+                correct: 1,
+                explanation: "Ekosistem tundra sangat dingin, berangin, dan tanah tertutup salju hampir sepanjang tahun."
+            },
+            {
+                question: "Dalam jaring-jaring makanan, satu makhluk hidup bisa...",
+                options: ["Hanya ada di satu rantai makanan", "Berada di lebih dari satu rantai makanan", "Tidak berperan apa-apa", "Hanya sebagai produsen"],
+                correct: 1,
+                explanation: "Dalam jaring-jaring makanan, satu makhluk hidup bisa memiliki peran berbeda dan berada di beberapa rantai makanan."
+            },
+            {
+                question: "Penggunaan pupuk kimia berlebihan dapat menyebabkan...",
+                options: ["Tanah semakin subur", "Kualitas tanah menurun", "Tanah tidak terpengaruh", "Tanah menjadi lebih gembur"],
+                correct: 1,
+                explanation: "Pupuk kimia berlebihan dapat merusak struktur tanah dan menurunkan kualitas tanah dalam jangka panjang."
+            },
+            {
+                question: "Komponen abiotik di ekosistem gua yang khas adalah...",
+                options: ["Stalaktit dan stalagmit", "Pasir pantai", "Salju dan es", "Air asin"],
+                correct: 0,
+                explanation: "Stalaktit (menggantung) dan stalagmit (menonjol dari dasar) adalah formasi batuan khas di ekosistem gua."
+            },
+            {
+                question: "Beruang madu masuk ke permukiman karena...",
+                options: ["Mencari madu", "Habitat rusak akibat penebangan pohon", "Ingin bertemu manusia", "Suka dengan rumah"],
+                correct: 1,
+                explanation: "Beruang madu kehilangan habitat dan sumber makanan karena manusia menebang pohon dan menggantinya dengan kelapa sawit."
+            },
+            {
+                question: "Transfer energi dalam rantai makanan berarti...",
+                options: ["Satu makhluk hidup menjadi sumber energi untuk makhluk hidup lain", "Energi tidak berpindah", "Energi hanya untuk tumbuhan", "Energi hanya untuk hewan"],
+                correct: 0,
+                explanation: "Dalam proses makan dan dimakan, terjadi transfer energi dari satu makhluk hidup ke makhluk hidup lainnya."
+            },
+            {
+                question: "Salah satu cara mengurangi dampak sampah plastik adalah...",
+                options: ["Membuang ke sungai", "Membakar di halaman", "Mendaur ulang dan mengurangi penggunaan", "Menimbun di tanah"],
+                correct: 2,
+                explanation: "Mendaur ulang dan mengurangi penggunaan plastik adalah cara terbaik untuk menjaga ekosistem dari pencemaran plastik."
+            },
+            {
+                question: "Ekosistem danau memiliki komponen biotik seperti...",
+                options: ["Burung bangau, buaya, ikan, rumput", "Unta, kaktus, kalajengking", "Beruang kutub, walrus, anjing laut", "Pohon pinus, serigala, rusa"],
+                correct: 0,
+                explanation: "Ekosistem danau memiliki burung bangau, buaya, berbagai ikan, rumput air, dan pohon di sekitarnya."
+            },
+            {
+                question: "Fotosintesis menghasilkan...",
+                options: ["Makanan untuk tumbuhan dan oksigen", "Karbon dioksida", "Air dan mineral", "Tanah subur"],
+                correct: 0,
+                explanation: "Fotosintesis menghasilkan makanan (glukosa) untuk tumbuhan dan oksigen yang penting bagi makhluk hidup lain."
+            },
+            {
+                question: "Polusi udara dari kendaraan bermotor dapat menyebabkan...",
+                options: ["Udara semakin segar", "Kualitas udara buruk dan gangguan pernapasan", "Tumbuhan tumbuh lebih cepat", "Hewan semakin sehat"],
+                correct: 1,
+                explanation: "Jumlah kendaraan bermotor yang banyak menghasilkan asap yang mencemari udara dan menurunkan kualitas udara."
+            },
+            {
+                question: "Mengapa dekomposer penting dalam ekosistem?",
+                options: ["Menguraikan makhluk hidup mati dan menyuburkan tanah", "Memakan tumbuhan hidup", "Menjadi predator puncak", "Menghasilkan oksigen"],
+                correct: 0,
+                explanation: "Dekomposer menguraikan bangkai dan sampah organik menjadi humus yang menyuburkan tanah, membantu daur ulang nutrisi."
+            },
+            {
+                question: "Taman Nasional Komodo terkenal karena...",
+                options: ["Surga bawah laut dengan terumbu karang dan beragam spesies ikan", "Hutan hujan tropis terbesar", "Gurun pasir terluas", "Danau terbesar di Indonesia"],
+                correct: 0,
+                explanation: "Taman Nasional Komodo di jantung segitiga terumbu karang Asia Pasifik menjadi surga bawah laut dengan terumbu karang, ikan pari manta, hiu, dan dugong."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        // Sound Effects
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'click') {
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'complete') {
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.3);
+                    osc.start(audioCtx.currentTime + i * 0.1);
+                    osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+                });
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        // Navigation Functions
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            playSound('click');
+        }
+
+        function showStart() {
+            showScreen('startScreen');
+        }
+
+        function showMaterial() {
+            showScreen('materialScreen');
+            showTopic('komponen', document.querySelector('.topic-tab'));
+        }
+
+        function showTopic(topic, element) {
+            document.querySelectorAll('.topic-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (element) element.classList.add('active');
+            
+            document.getElementById('materialText').innerHTML = materialContent[topic];
+            playSound('click');
+        }
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            showScreen('quizScreen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            document.getElementById('questionNumber').textContent = `Soal ${currentQuestion + 1} dari ${questions.length}`;
+            document.getElementById('scoreDisplay').textContent = `Skor: ${score}`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('nextBtn').classList.remove('show');
+            
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+                btn.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (answered) return;
+            answered = true;
+            
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            
+            options.forEach((btn, index) => {
+                btn.classList.add('disabled');
+                if (index === q.correct) {
+                    btn.classList.add('correct');
+                } else if (index === selectedIndex && index !== q.correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+            
+            if (selectedIndex === q.correct) {
+                score += 5;
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `✅ Benar!<br><small>${q.explanation}</small>`;
+                playSound('correct');
+            } else {
+                feedback.className = 'feedback wrong show';
+                feedback.innerHTML = `❌ Salah!<br><small>${q.explanation}</small>`;
+                playSound('wrong');
+            }
+            
+            document.getElementById('scoreDisplay').textContent = `Skor: ${score}`;
+            document.getElementById('nextBtn').classList.add('show');
+            
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('nextBtn').textContent = 'Lihat Hasil 🎯';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Soal Selanjutnya →';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            showScreen('resultScreen');
+            playSound('complete');
+            
+            const percentage = (score / (questions.length * 5)) * 100;
+            document.getElementById('finalScore').textContent = `${score} / ${questions.length * 5}`;
+            
+            let stars = '';
+            let message = '';
+            
+            if (percentage >= 90) {
+                stars = '⭐⭐⭐';
+                message = 'Luar Biasa! Kamu sangat memahami materi ekosistem!';
+            } else if (percentage >= 70) {
+                stars = '⭐⭐';
+                message = 'Bagus! Terus belajar untuk hasil yang lebih baik!';
+            } else if (percentage >= 50) {
+                stars = '⭐';
+                message = 'Cukup baik! Pelajari lagi materi yang belum dipahami!';
+            } else {
+                stars = '💪';
+                message = 'Jangan menyerah! Ayo pelajari materi lagi dan coba sekali lagi!';
+            }
+            
+            document.getElementById('stars').textContent = stars;
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        window.onload = () => {
+            showStart();
+        };
+
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
